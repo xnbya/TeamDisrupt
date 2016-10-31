@@ -1,0 +1,14 @@
+language: ruby
+rvm:
+    - 2.2.2
+env:
+    - DB=postgresql
+services:
+    - postgresql
+before_install:
+    - cd webapp
+script:
+    - RAILS_ENV=test bundle exec rake db:migrate --trace
+    - bundle exec rake db:test:prepare
+before_script:
+    - psql -c 'create database test;' -U postgres
