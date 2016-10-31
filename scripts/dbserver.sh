@@ -1,9 +1,8 @@
 #!/bin/bash
-apt update
-apt upgrade -y
-apt install postgres psql git -y
+apt-get update
+apt-get upgrade -y
+apt-get install postgresql git -y
 
-su admin
 #setup ssh config
 key="-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAzDgRoU3gSfnGKL0z+gaPAp54zL+xdvgKjA9n58zL0BsGEFjq
@@ -41,24 +40,28 @@ sshconfig="host github.com
 hosts="|1|ZQVBF0swqh3i5zBSg4Kwgbt4/XI=|hQIGxNO4T6olF7jfTQ0a1LHolbI= ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
 |1|r+W4IcysXkngiJN9OSMXiHpL+O0=|mU6uA/vUxIGrxJn1iGFsvFSIPdg= ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
 
+ahome=/home/admin
 
-echo "$key"  >  ~/.ssh/id_rsa_github
-echo "$sshconfig" > ~/.ssh/config
-echo "$hosts" > ~/.ssh/known_hosts
 
-git clone git@github.com:xnbya/TeamDisrupt.git
+echo "$key"  | sudo -u admin tee  $ahome/.ssh/id_rsa_github
+sudo -u admin chmod 600 $ahome/.ssh/id_rsa_github
+echo "$sshconfig" | sudo -u admin tee $ahome/.ssh/config
+echo "$hosts" | sudo -u admin tee $ahome/.ssh/known_hosts
+
+cd $ahome
+sudo -u admin git clone git@github.com:xnbya/TeamDisrupt.git
 cd TeamDisrupt
 
 #for testing branch
-git checkout scripting
+sudo -u admin git checkout scripting
 
 #setup postgres
-sudo cp -R database/root/ /
+cp -R database/root/* /
 
 #TEST PW - DANGER!!!!
 sudo -u postgres psql -c "CREATE USER pgadmin WITH PASSWORD 'SuperSecure11!';"
-sudo createdb pgadmin
-sudo service postgresql restart
+sudo -u postgres createdb pgadmin
+service postgresql restart
 
 
 

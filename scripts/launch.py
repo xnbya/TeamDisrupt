@@ -12,7 +12,7 @@ f=open("dbserver.sh")
 script=f.read()
 
 ec2 = boto3.client('ec2')
-instance = ec2.run_instances(
+instances = ec2.run_instances(
         ImageId=config.get(myconfig,"image-id"),
         MinCount=1,
         MaxCount=1,
@@ -22,7 +22,16 @@ instance = ec2.run_instances(
         UserData=script
 )
 
-print(instance)
+print(instances)
+ids =[]
+for instance in instances['Instances']:
+    print(instance)
+    print("ID is",instance['InstanceId'])
+    ids.append(instance['InstanceId'])
+
+#status = ec2.describe_instances(InstanceIds=ids)
+#print("status", status)
+#print("IP", status['Instances'][0]['PublicIpAddress'])
 
 
 
