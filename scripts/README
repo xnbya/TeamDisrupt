@@ -1,0 +1,11 @@
+Scripts for setting up VMs
+##########################
+
+---
+Seting up dev machine
+---
+
+For the dev machine, you need to have the AWS CLI installed and configured
+with credentials for your AWS account, python3 and boto3.
+
+These can be installed by runnning `sudo pip install awscli boto3`.
