@@ -6,5 +6,6 @@ class HomeController < ApplicationController
     end
 
     def home
+      @references = current_user.references.all
     end
 end

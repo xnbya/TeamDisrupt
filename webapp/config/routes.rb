@@ -5,6 +5,9 @@ Rails.application.routes.draw do
 
   get '/home' => 'home#home'
 
+  get '/references' => 'reference#index'
+  get '/references/create' => 'reference#new'
+
   devise_for :users, :controllers => {
     :registrations => "users/registrations"
   }
