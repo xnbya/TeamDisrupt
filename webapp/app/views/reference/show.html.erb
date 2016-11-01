@@ -1,5 +1,6 @@
 <h1><%= @reference.title %><%= "Untitled Reference" unless @reference.title.length > 0 %></h1>
-<p>Created by <%= @user.name %></p>
+<% unless @user.nil? %><p>Created by <%= @user.name %></p><% end %>
 <a href="<%= @reference.link %>">Link</a>
 <h2>About this reference</h2>
 <p><%= @reference.note %></p>
+<p><%= link_to "Edit", reference_edit_path(@reference) %></p>
