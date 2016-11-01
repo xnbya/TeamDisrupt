@@ -1,0 +1,5 @@
+<h1><%= @reference.title %><%= "Untitled Reference" unless @reference.title.length > 0 %></h1>
+<p>Created by <%= @user.name %></p>
+<a href="<%= @reference.link %>">Link</a>
+<h2>About this reference</h2>
+<p><%= @reference.note %></p>

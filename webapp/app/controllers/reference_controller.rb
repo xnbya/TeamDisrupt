@@ -17,6 +17,11 @@ class ReferenceController < ApplicationController
   def index
   end
 
+  def show
+    @reference = Reference.find(params[:id])
+    @user = @reference.user
+  end
+
   private
 
   def reference_params

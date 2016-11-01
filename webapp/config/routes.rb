@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get '/references' => 'reference#index'
   get '/references/create' => 'reference#new'
   post '/references/create' => 'reference#create'
+  get '/references/:id' => 'reference#show', as: :reference
 
   devise_for :users, :controllers => {
     :registrations => "users/registrations"
