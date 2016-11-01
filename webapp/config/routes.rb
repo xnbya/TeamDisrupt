@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   get '/references' => 'reference#index'
   get '/references/create' => 'reference#new'
+  post '/references/create' => 'reference#create'
 
   devise_for :users, :controllers => {
     :registrations => "users/registrations"
