@@ -1,0 +1,6 @@
+<h1>Hey, <%= current_user.name %>!</h1>
+
+<%= link_to "Add Reference", references_create_path %>
+<% @references.each do |reference| %>
+  <h2><%= reference.title %></h2>
+<% end %>
