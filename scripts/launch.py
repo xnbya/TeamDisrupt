@@ -29,9 +29,9 @@ for instance in instances['Instances']:
     print("ID is",instance['InstanceId'])
     ids.append(instance['InstanceId'])
 
-#status = ec2.describe_instances(InstanceIds=ids)
-#print("status", status)
-#print("IP", status['Instances'][0]['PublicIpAddress'])
+status = ec2.report_instance_statuses(Instances=ids)
+print("status", status)
+print("IP", status['Instances'][0]['PublicIpAddress'])
 
 
 
