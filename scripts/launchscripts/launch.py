@@ -38,9 +38,9 @@ waiter = ec2.get_waiter('instance_running')
 waiter.wait(InstanceIds=ids)
 
 print('Instances running')
-time.sleep(10)
-print('WAIT')
+time.sleep(20)
 
+print('WAIT')
 #get IPs
 ec2r = boto3.resource('ec2')
 dbserver = ec2r.Instance(ids[0])
@@ -64,6 +64,8 @@ runcmd(dbserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/db
 print("DB server setup, starting appserver")
 
 runcmd(appserver.public_ip_address, '"`cat gitsetup.sh`"')
+
+print('appserver ip:' + appserver.public_ip_address)
 runcmd(appserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/staging-server.sh ' + dbpass + ' ' + dbserver.public_ip_address + '"')
 
 
