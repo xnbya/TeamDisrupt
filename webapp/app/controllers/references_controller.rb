@@ -1,4 +1,4 @@
-class ReferenceController < ApplicationController
+class ReferencesController < ApplicationController
   before_action :authenticate_user!
 
   # Displays new reference form.
@@ -13,9 +13,10 @@ class ReferenceController < ApplicationController
     #TODO: Sanitise links
 
     if @reference.save
-      redirect_to '/home'
+      alert = "Saved!"
+      redirect_to home_path
     else
-      redirect_to '/references/create'
+      redirect_to new_reference_path
     end
   end
 
@@ -39,6 +40,22 @@ class ReferenceController < ApplicationController
     # Don't delete if it doesn't belong to user!
     unless @user == current_user
       flash[:alert] = "You cannot edit this because you aren't #{@user.nil? ? "nil user" : @user.name}!"
+      redirect_to @reference
+    end
+  end
+
+  def update
+    @reference = Reference.find(params[:id])
+    @user = @reference.user
+
+    if @user==current_user
+      if @reference.update_attributes(reference_params)
+        redirect_to @reference
+      else
+        flash[:alert] = "Something went wrong!"
+      end
+    else
+      flash[:alert] = "You can't do that!"
       redirect_to @reference
     end
   end
