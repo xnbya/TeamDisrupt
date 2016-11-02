@@ -8,9 +8,9 @@
 auser=ubuntu
 ahome=/home/$auser
 
-apt-get update
-apt-get upgrade -y
-apt-get install git -y
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get install git -y
 
 #setup ssh config
 key="-----BEGIN RSA PRIVATE KEY-----
