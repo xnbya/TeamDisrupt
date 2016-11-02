@@ -2,9 +2,11 @@
 ###############################################################
 # Script to setup database server
 # Installs and configures postgres
-# Run from this dir
 # target: ubuntu 16.04
+# need to run gitsetup script first
 ###############################################################
+
+
 
 #pass password for pgadmin as first argument
 
@@ -12,7 +14,8 @@ sudo apt-get install postgresql -y
 
 #setup postgres
 #the config files allow tcp connections
-sudo cp -R ./database/root/* /
+#assumes repo is already there
+sudo cp -R /home/ubuntu/TeamDisrupt/database/root/* /
 
 #TEST PW - DANGER!!!!
 sudo -u postgres psql -c "CREATE USER pgadmin WITH PASSWORD '$1'; ALTER USER pgadmin CREATEDB"

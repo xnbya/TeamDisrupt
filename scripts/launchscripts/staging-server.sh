@@ -34,13 +34,13 @@ production:
 
 #setup db for app
 cd ~/TeamDisrupt/webapp
+git checkout development
 rm ./config/database.yml
 echo "${dbconf}" | tee ./config/database.yml
 
 sudo apt-get install -y libsqlite3-dev ruby ruby-dev rails build-essential libpq-dev 
 
 sudo gem install builder
-git checkout development
 bundle install
 
 rake db:create

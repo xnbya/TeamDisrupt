@@ -38,12 +38,15 @@ waiter = ec2.get_waiter('instance_running')
 waiter.wait(InstanceIds=ids)
 
 print('Instances running')
+time.sleep(10)
+print('WAIT')
 
 #get IPs
-dbserver = ec2.Instance(ids[0])
+ec2r = boto3.resource('ec2')
+dbserver = ec2r.Instance(ids[0])
 print('dbserver ip: ' + dbserver.public_ip_address)
 
-appserver = ec2.Instance(ids[1])
+appserver = ec2r.Instance(ids[1])
 print('appserver ip:' + appserver.public_ip_address)
     
 print('setting up database server')
@@ -52,7 +55,7 @@ dbpass = 'hunter3'
 print('password', dbpass)
 
 def runcmd(servip, command):
-    os.system('ssh -i ' + config.get(myconfig, "key-location") + ' ubuntu@' + servip + " " + command )
+    os.system('ssh -oStrictHostKeyChecking=no -i ' + config.get(myconfig, "key-location") + ' ubuntu@' + servip + " " + command )
 
 runcmd(dbserver.public_ip_address, '"`cat gitsetup.sh`"')
 print("GIT setup")
