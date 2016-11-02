@@ -93,10 +93,10 @@ fi
 
 # Check that `pg_dump` command exists, otherwise throw an error
 dumpcommand="pg_dump"
-if ! type "$dumpcommand" > /dev/null
+if ! command -v "$dumpcommand" > /dev/null
 then
     echo "'$dumpcommand' command was not found!"
-    echi "Run 'sudo apt-get install postgresql-client' to install it."
+    echo "Run 'sudo apt-get install postgresql-client' to install it."
     exit 1
 else
     echo "'$dumpcommand' command is available, moving on..."
