@@ -6,6 +6,6 @@ class HomeController < ApplicationController
     end
 
     def home
-      @references = current_user.references.all.reverse
+      @references = current_user.references.limit(5).reverse
     end
 end
