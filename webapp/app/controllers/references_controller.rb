@@ -36,7 +36,6 @@ class ReferencesController < ApplicationController
   def edit
     @reference = Reference.find(params[:id])
     @user = @reference.user
-
     # Don't delete if it doesn't belong to user!
     unless @user == current_user
       flash[:alert] = "You cannot edit this because you aren't #{@user.nil? ? "nil user" : @user.name}!"
@@ -48,15 +47,21 @@ class ReferencesController < ApplicationController
     @reference = Reference.find(params[:id])
     @user = @reference.user
 
-    if @user==current_user
-      if @reference.update_attributes(reference_params)
-        redirect_to @reference
+    params[:reference][:link] = url_format(params[:reference][:link])
+    unless params[:reference][:link].nil?
+      if @user==current_user
+        if @reference.update_attributes(reference_params)
+          redirect_to @reference
+        else
+          flash[:alert] = "Something went wrong!"
+        end
       else
-        flash[:alert] = "Something went wrong!"
+        flash[:alert] = "You can't do that!"
+        redirect_to @reference
       end
     else
-      flash[:alert] = "You can't do that!"
-      redirect_to @reference
+      flash[:alert] = "Not a valid url!"
+      redirect_to edit_reference_path(@reference)
     end
   end
 
@@ -66,7 +71,18 @@ class ReferencesController < ApplicationController
     params.require(:reference).permit(:title, :link, :note)
   end
 
-  # def verify_url()
-  # end
-  #TODO finish this
+  def url_format(str)
+    allowed_chars = "[-A-Za-z0-9@:%._\+~#=?&//=]"
+    print str
+    unless (/^(https?\:)?\/\// =~ str)
+      str = "http://" << str
+    end
+
+    if /^(https?:)?\/\/#{allowed_chars}{2,256}\.[a-z]{2,6}\b(#{allowed_chars}*)?/ =~ str
+      return str
+    else
+      return nil
+    end
+  end
+
 end
