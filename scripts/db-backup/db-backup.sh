@@ -97,7 +97,7 @@ dumpcommand="pg_dump"
 if ! type "$dumpcommand" > /dev/null
 then
     echo "'$dumpcommand' was not found, installing Postgres client tools..."
-    sudo apt-get install pgclient
+    apt-get install postgresql-client -y
 else
     echo "'$dumpcommand' command is available, moving on..."
 fi
