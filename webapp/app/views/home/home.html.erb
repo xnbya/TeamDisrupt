@@ -9,3 +9,5 @@
     <%= link_to "Delete", reference_path(reference) %> <!-- edit this to match reference_delete_path once pushed to github-->
   </p>
 <% end %>
+
+<p><%= link_to "Log out", destroy_user_session_path, :method => :delete %></p>
