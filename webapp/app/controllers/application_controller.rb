@@ -7,6 +7,11 @@ class ApplicationController < ActionController::Base
       {
         :name => "Home",
         :url => root_path
+      },
+
+      {
+        :name => "Sign In",
+        :url => new_user_session_path
       }
     ]
 
