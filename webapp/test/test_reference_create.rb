@@ -35,13 +35,11 @@ module Test
     end
 
     test '01 user can create a reference' do
-      print 'entered'
       @driver.navigate.to(@new_reference_url)
       wait = Selenium::WebDriver::Wait.new(:timeout => 5)
       wait.until {
          @driver.find_element(:name, 'commit')
       }
-      print 'found commit button for create reference'
 
       title = @driver.find_element(:id, 'reference_title')
       title.clear
@@ -59,15 +57,20 @@ module Test
 
       wait = Selenium::WebDriver::Wait.new(:timeout => 5)
       wait.until {
-        @driver.find_elements(:tag_name, 'h3').each do |elem|
-          if elem.text.include? 'Graph Theory'
-            assert true
-            return
-          end
-        end
-        assert false
+        @driver.find_elements(:tag_name, 'h3')
       }
+
+      created = false
+
+      @driver.find_elements(:tag_name, 'h3').each do |elem|
+        if elem.text.include? 'Graph Theory'
+          created = true
+          break
+        end
+      end
+
+      assert(created)
     end
 
-  end
+  end 
 end
