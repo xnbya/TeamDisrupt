@@ -169,6 +169,7 @@ environment	development	2016-11-01 13:15:30.188725	2016-11-01 13:15:30.188725
 --
 
 COPY "references" (id, title, link, note, user_id, created_at, updated_at) FROM stdin;
+1	Meeting	abc.ppt	4/Nov/2016	1	2016-11-02 12:16:30.665974	2016-11-02 12:16:30.665974
 \.
 
 
@@ -176,7 +177,7 @@ COPY "references" (id, title, link, note, user_id, created_at, updated_at) FROM 
 -- Name: references_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('references_id_seq', 1, false);
+SELECT pg_catalog.setval('references_id_seq', 2, true);
 
 
 --
@@ -194,6 +195,8 @@ COPY schema_migrations (version) FROM stdin;
 --
 
 COPY users (id, email, encrypted_password, reset_password_token, reset_password_sent_at, remember_created_at, sign_in_count, current_sign_in_at, last_sign_in_at, current_sign_in_ip, last_sign_in_ip, name, created_at, updated_at) FROM stdin;
+1	abc@zzz.com	$2a$11$GKJ4hbByVdoJ45UctRl1EuRq3hxScCklbYCjUBZQRyTl8YhQhYEsO	\N	\N	\N	2	2016-11-02 12:26:32.016807	2016-11-02 12:13:17.170644	202.246.252.97	202.246.252.97	abc	2016-11-02 12:13:17.161845	2016-11-02 12:26:32.018264
+2	1611021234@zzz.com	$2a$11$X3W.Fe8yCAcfCvgxosOKkugL2WAYLgocwPiAMIo.USBwkOGPpffUK	\N	\N	\N	1	2016-11-02 12:34:20.940156	2016-11-02 12:34:20.940156	144.82.8.208	144.82.8.208	abc	2016-11-02 12:34:20.937359	2016-11-02 12:34:20.940825
 \.
 
 
@@ -201,7 +204,7 @@ COPY users (id, email, encrypted_password, reset_password_token, reset_password_
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('users_id_seq', 1, false);
+SELECT pg_catalog.setval('users_id_seq', 2, true);
 
 
 --
