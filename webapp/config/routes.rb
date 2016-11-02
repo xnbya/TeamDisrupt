@@ -5,11 +5,7 @@ Rails.application.routes.draw do
 
   get '/home' => 'home#home'
 
-  get '/references' => 'reference#index'
-  get '/references/create' => 'reference#new'
-  post '/references/create' => 'reference#create'
-  get '/references/:id' => 'reference#show', as: :reference
-  get '/references/:id/edit' => 'reference#edit', as: :reference_edit
+  resources :references
 
   devise_for :users, :controllers => {
     :registrations => "users/registrations"

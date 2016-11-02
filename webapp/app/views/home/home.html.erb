@@ -2,7 +2,7 @@
   <h1>Hey, <%= current_user.name %>!</h1>
 </div>
 
-<%= link_to "Add Reference", references_create_path %>
+<%= link_to "Add Reference", new_reference_path %>
 <h2>Your Latest References</h2>
 <% @references.each do |reference| %>
   <h3><%= reference.title %><%= "Untitled Reference" unless reference.title.length > 0 %></h3>
