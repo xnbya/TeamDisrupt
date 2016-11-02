@@ -1,4 +1,6 @@
-<h1>Hey, <%= current_user.name %>!</h1>
+<div class="jumbotron">
+  <h1>Hey, <%= current_user.name %>!</h1>
+</div>
 
 <%= link_to "Add Reference", references_create_path %>
 <% @references.each do |reference| %>

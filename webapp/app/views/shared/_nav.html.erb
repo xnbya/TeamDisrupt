@@ -11,8 +11,6 @@
   </ul>
 
   <% if user_signed_in? %>
-    <form class="form-inline float-xs-right">
-      <%= button_to "Sign Out", destroy_user_session_path, :method => :delete, :class => "btn btn-primary" %>
-    </form>
+      <%= button_to "Sign Out", destroy_user_session_path, method: 'delete', class: "btn btn-primary" %>
   <% end %>
 </nav>
