@@ -8,11 +8,10 @@
 # in parameters and creates a dump of it, saving the result to the specified
 # folder using the `YYYY-MM-DD_HH-mm-SS.sql` format.
 #
-# This script uses `pg_dump` command, so if it is not found, it will proceed
-# to install necessary packages for this command. Before running `pg_dump`,
-# the script will create a `~/.pgpass` file with login credentials, deleting
-# after `pg_dump` will finish its execution. If `~/.pgpass` already exists,
-# the script will throw an error.
+# This script uses `pg_dump` command, so if it is not found the script will
+# throw an error. Before running `pg_dump`, the script will create a `~/.pgpass`
+# file with login credentials, deleting it after `pg_dump` will finish its 
+# execution. If `~/.pgpass` already exists, the script will throw an error.
 #
 # If the `[days]` parameter is specified, script will proceed to scan
 # the `<dir>` directory and remove all files older than `[days]` days.
@@ -92,12 +91,13 @@ then
     days=$7
 fi
 
-# Check that `pg_dump` command exists, otherwise install pg client
+# Check that `pg_dump` command exists, otherwise throw an error
 dumpcommand="pg_dump"
-if ! type "$dumpcommand" > /dev/null
+if ! command -v "$dumpcommand" > /dev/null
 then
-    echo "'$dumpcommand' was not found, installing Postgres client tools..."
-    apt-get install postgresql-client -y
+    echo "'$dumpcommand' command was not found!"
+    echo "Run 'sudo apt-get install postgresql-client' to install it."
+    exit 1
 else
     echo "'$dumpcommand' command is available, moving on..."
 fi
