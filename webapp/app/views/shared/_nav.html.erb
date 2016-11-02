@@ -1,0 +1,18 @@
+<nav class="navbar navbar-dark bg-inverse">
+  <%= link_to "Simpleref", root_path, :class => "navbar-brand" %>
+  <ul class="nav navbar-nav">
+    <% ((user_signed_in?)? @nav_items_user : @nav_items).each do |i| %>
+      <li class="nav-item <%= 'active' if current_page?(i[:url]) %>">
+        <a href="<%= i[:url] %>" class="nav-link"><%= i[:name] %>
+          <% if current_page?(i[:url]) %> <span class="sr-only">(current)</span><% end %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+
+  <% if user_signed_in? %>
+    <form class="form-inline float-xs-right">
+      <%= button_to "Sign Out", destroy_user_session_path, :method => :delete, :class => "btn btn-primary" %>
+    </form>
+  <% end %>
+</nav>
