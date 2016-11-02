@@ -1,5 +1,34 @@
 #!/bin/bash 
 
+#######################################################################
+#
+# Description of this script:
+# 
+# This script connects to a Postgres database using the credentials specified
+# in parameters and creates a dump of it, saving the result to the specified
+# folder using the `YYYY-MM-DD_HH-mm-SS.sql` format.
+#
+# This script uses `pg_dump` command, so if it is not found, it will proceed
+# to install necessary packages for this command. Before running `pg_dump`,
+# the script will create a `~/.pgpass` file with login credentials, deleting
+# after `pg_dump` will finish its execution. If `~/.pgpass` already exists,
+# the script will throw an error.
+#
+# If the `[days]` parameter is specified, script will proceed to scan
+# the `<dir>` directory and remove all files older than `[days]` days.
+#
+# Run this script without any parameters to see usage instructions.
+#
+# Example:
+# 
+# /db-backup.sh 54.93.198.216 5432 simpleref_test postgres hunter2 ./dumps 1
+# 
+# Running the command above will make a dump of the `simpleref_test` database
+# in the `./dumps` directory (given it exists) and delete all other dumps in
+# this directory that are older than 1 day.
+#
+#######################################################################
+
 programname=$0
 
 function usage {
@@ -51,10 +80,11 @@ then
 fi
 
 # Check if [days] is set and if it's an integer
+# Note: This check ALLOWS negative dates
 if [ "$#" -eq 7 ]
 then
-    regex='^[0-9]+$'
-    if [ ! $7 =~ $regex ]
+    regex='^-?[0-9]+$'
+    if [[ ! $7 =~ $regex ]]
     then
         echo "'$7' is not an integer!"
         exit 1
@@ -66,24 +96,66 @@ fi
 dumpcommand="pg_dump"
 if ! type "$dumpcommand" > /dev/null
 then
-    echo "'$dumpcommand' was not found, installed Postgres client tools..."
+    echo "'$dumpcommand' was not found, installing Postgres client tools..."
     sudo apt-get install pgclient
 else
     echo "'$dumpcommand' command is available, moving on..."
 fi
 
-#eval "pg_dump -U postgres -h 54.93.192.216 simpleref_db"
-#eval "pg_dump -h $host -U postgres $db"
+# Create `~/.pgpass` file if it doesn't exist, throw an error otherwise
+pgpasspath=~/.pgpass
+if [ -e $pgpasspath ]
+then
+    echo "'$pgpasspath' exists, delete it before running the script!"
+    exit 1
+else
+    echo "Creating '$pgpasspath'..."
+    echo "$host:$port:$db:$user:$pass" > $pgpasspath 
+    echo "Changing permissions on '$pgpasspath' to 600..."
+    chmod 600 $pgpasspath
+fi
 
-# Delete files older that [days]
-for filename in $dir*
-do
-    echo "$filename"
-done
+# Fetch the dump from remote database
+echo "Retreiving the dump of the database..."
+dump=$(eval "$dumpcommand -U $user -h $host $db")
+echo "Dump retreived successfully!"
 
+# Delete `~/.pgpass` since it's not needed anymore
+echo "Deleting '$pgpasspath'..."
+rm $pgpasspath
 
+# Save the dump
+dumpfile="$(date +"%Y-%m-%d_%H-%M-%S").sql"
+echo "Saving dump with the name '$dumpfile' into '$dir'..."
+echo "$dump" > $dir$dumpfile
+echo "Done!"
 
-
-
+# Delete files older than [days] if [days] is set
+if [ ! -z ${days+x} ]
+then
+    echo "'[days]' is set, deleting file(s) older than $days days from '$dir'..."
+    counter=0
+    now=$(date +%s)
+    dayseconds="$(expr 3600 "*" 24)"
+    for filename in $dir*.sql
+    do
+        if [ ! -e "$filename" ]
+        then
+            continue
+        fi
+        lastmodified=$(eval "date +%s -r $filename")
+        secondselapsed="$(expr $now - $lastmodified)"
+        dayselapsed="$(expr $secondselapsed "/" $dayseconds)"
+        if [ $dayselapsed -gt $days ]
+        then
+            echo "Dump has expired, deleting!"
+            counter=$((counter+1))
+            rm "$filename"
+        fi
+    done
+    echo "Deleted $counter file(s)."
+else
+    echo "'[days]' is not set, NOT deleting anything."
+fi
 
 exit 0
