@@ -1,0 +1,25 @@
+---
+- name: Install aptitude
+  become: yes
+  command: apt-get install aptitude -y
+
+- name: Update apt repositories
+  apt:
+    update-cache: yes
+
+- name: Upgrade installed packages
+  apt:
+    upgrade: yes
+
+- name: Install Ruby and related packages
+  apt: pkg={{item}} state=present
+  with_items:
+    - ruby
+    - ruby-dev
+    - rails
+    - build-essential
+    - libpq-dev
+
+- name: Install builder
+  become: yes
+  command: gem install builder

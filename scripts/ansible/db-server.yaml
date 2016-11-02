@@ -1,4 +1,6 @@
 ---
 - hosts: tag_Name_db
+  vars_files:
+    - ./vars/postgres.yaml
   roles:
     - postgresql
