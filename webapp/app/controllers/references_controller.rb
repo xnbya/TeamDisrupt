@@ -10,8 +10,6 @@ class ReferencesController < ApplicationController
   def create
     @reference = current_user.references.new(reference_params)
 
-    #TODO: Sanitise links
-
     if @reference.save
       alert = "Saved!"
       redirect_to home_path
@@ -47,8 +45,8 @@ class ReferencesController < ApplicationController
     @reference = Reference.find(params[:id])
     @user = @reference.user
 
-    params[:reference][:link] = url_format(params[:reference][:link])
-    unless params[:reference][:link].nil?
+    params[:reference][:link] = Reference.sanitise_url(params[:reference][:link])
+    if Reference.valid_url(params[:reference][:link])
       if @user==current_user
         if @reference.update_attributes(reference_params)
           redirect_to @reference
@@ -69,20 +67,6 @@ class ReferencesController < ApplicationController
 
   def reference_params
     params.require(:reference).permit(:title, :link, :note)
-  end
-
-  def url_format(str)
-    allowed_chars = "[-A-Za-z0-9@:%._\+~#=?&//=]"
-    print str
-    unless (/^(https?\:)?\/\// =~ str)
-      str = "http://" << str
-    end
-
-    if /^(https?:)?\/\/#{allowed_chars}{2,256}\.[a-z]{2,6}\b(#{allowed_chars}*)?/ =~ str
-      return str
-    else
-      return nil
-    end
   end
 
 end
