@@ -1,4 +1,7 @@
-<h1>References</h1>
+<div class="jumbotron">
+  <h1>All References</h1>
+</div>
+
 <% @references.each do |r| %>
   <h3><%= r.title %><%= "Untitled Reference" unless r.title.length > 0 %></h3>
   <p>Created on <%= r.created_at.strftime("%a %d %B") %></p>
