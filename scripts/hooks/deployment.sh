@@ -35,7 +35,7 @@ fi
 branch="$1"
 
 # Switch to `webapp` folder
-dir=~/dev/TeamDisrupt/webapp/
+dir=~/TeamDisrupt/webapp/
 echo "Switching to '$dir'..."
 cd $dir
 
@@ -57,10 +57,13 @@ eval "git reset --hard origin/$branch"
 # Restore $dbconfig
 echo "$dbtmp" > $dbconfig
 
+# run bundle install
+bundle install
+
 # Migrate the DB
 echo "Migrating the database..."
 rake db:migrate
 
 # Restart rails
 echo "Starting up the Rails server..."
-eval "tmux -d -s $sessionname \"rails s -b 0.0.0.0\""
+eval "tmux new -d -s $sessionname \"rails s -b 0.0.0.0\""

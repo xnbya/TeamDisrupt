@@ -26,12 +26,6 @@ if (config.has_section('instances')):
         print("Removing instances from local configuration file")
         config.remove_section('instances')
 
-print("Deploy testing? (Y/n)")
-testing = False
-if input() != 'n':
-    testing = True
-    print("Deploying Testing Servers")
-
 #launch instances
 ec2 = boto3.client('ec2')
 instances = ec2.run_instances(
@@ -97,13 +91,12 @@ print("DB server setup, starting appserver")
 runcmd(appserver.public_ip_address, '"`cat gitsetup.sh`"')
 runcmd(dbbackupserver.public_ip_address, '"`cat gitsetup.sh`"')
 
-if(testing):
-    runcmd(dbbackupserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/db-backup-server.sh ' + dbpass + ' ' + dbserver.public_ip_address + ' simpleref_development"')
-    runcmd(appserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/staging-server.sh ' + dbpass + ' ' + dbserver.public_ip_address + '"')
+runcmd(dbbackupserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/db-backup-server.sh ' + dbpass + ' ' + dbserver.public_ip_address + ' simpleref_development"')
+runcmd(appserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/app-server.sh ' + dbpass + ' ' + dbserver.public_ip_address + '"')
    
 
 # Print instances IPs
 print('db: {}'.format(dbserver.public_ip_address))
 print('app: {}'.format(appserver.public_ip_address))
-print('app running under tmux instance, connect to it at http://{}:3000',format(appserver.public_ip_address))
+print('app running under tmux instance, connect to it at http://{}:3000'.format(appserver.public_ip_address))
 
