@@ -11,20 +11,33 @@ myconfig="ec2conf"
 #f=open("dbserver.sh")
 #script=f.read()
 
+ec2r = boto3.resource('ec2')
 #check to see if instances exist
+
 if (config.has_section('instances')):
-        print("Instances exist, continue? (y/N)")
+        print("There are instances in your config file. Do you want to terminate them? (y/N)")
         if input() != 'y':
             sys.exit()
+
+        configured_ids = [config.get('instances','dbid'), config.get('instances','appid')]
+        print("Terminating AWS instances")
+        ec2r.instances.filter(InstanceIds=configured_ids).terminate()
+
+        print("Removing instances from local configuration file")
         config.remove_section('instances')
-    
+
+print("Deploy testing? (Y/n)")
+testing = False
+if input() != 'n':
+    testing = True
+    print("Deploying Testing Servers")
 
 #launch instances
 ec2 = boto3.client('ec2')
 instances = ec2.run_instances(
         ImageId=config.get(myconfig,"image-id"),
-        MinCount=2,
-        MaxCount=2,
+        MinCount=3,
+        MaxCount=3,
         KeyName=config.get(myconfig,"key-name"),
         SecurityGroups=[config.get(myconfig,"security-groups")],
         InstanceType=config.get(myconfig,"instance-type")
@@ -45,17 +58,16 @@ waiter.wait(InstanceIds=ids)
 print('Instances running')
 
 #get IPs
-ec2r = boto3.resource('ec2')
 dbserver = ec2r.Instance(ids[0])
-print('dbserver ip: ' + dbserver.public_ip_address)
-
 appserver = ec2r.Instance(ids[1])
-print('appserver ip:' + appserver.public_ip_address)
+dbbackupserver = ec2r.Instance(ids[2])
 
 #db password
 #dbpass = 'hunter3'
 dbpass = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(20))
 print('password', dbpass)
+
+#db backup server
 
 #save instances
 config.add_section('instances')
@@ -63,6 +75,8 @@ config.set('instances','dbid',ids[0])
 config.set('instances','dbip',dbserver.public_ip_address)
 config.set('instances','appid',ids[1])
 config.set('instances','appip',appserver.public_ip_address)
+config.set('instances','backupid',ids[2])
+config.set('instances','backupip',dbbackupserver.public_ip_address)
 config.set('instances','dbpass',dbpass)
 conffile = open('ec2config.ini', 'w')
 config.write(conffile)
@@ -81,7 +95,15 @@ runcmd(dbserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/db
 print("DB server setup, starting appserver")
 
 runcmd(appserver.public_ip_address, '"`cat gitsetup.sh`"')
+runcmd(dbbackupserver.public_ip_address, '"`cat gitsetup.sh`"')
 
-print('appserver ip:' + appserver.public_ip_address)
-runcmd(appserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/staging-server.sh ' + dbpass + ' ' + dbserver.public_ip_address + '"')
+if(testing):
+    runcmd(dbbackupserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/db-backup-server.sh ' + dbpass + ' ' + dbserver.public_ip_address + ' simpleref_development"')
+    runcmd(appserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/staging-server.sh ' + dbpass + ' ' + dbserver.public_ip_address + '"')
+   
+
+# Print instances IPs
+print('db: {}'.format(dbserver.public_ip_address))
+print('app: {}'.format(appserver.public_ip_address))
+print('app running under tmux instance, connect to it at http://{}:3000',format(appserver.public_ip_address))
 

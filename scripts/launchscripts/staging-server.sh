@@ -32,7 +32,7 @@ production:
 
 #setup db for app
 cd ~/TeamDisrupt/webapp
-git checkout testing
+git checkout development
 rm ./config/database.yml
 echo "${dbconf}" | tee ./config/database.yml
 

@@ -1,5 +1,5 @@
 ---
 - hosts: tag_Name_staging
   roles:
-#    - git
+    - git
     - app
