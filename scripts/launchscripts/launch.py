@@ -19,9 +19,9 @@ if (config.has_section('instances')):
         if input() != 'y':
             sys.exit()
 
-        configured_ids = [config.get('instances','dbid'), config.get('instances','appid')]
-        print("Terminating AWS instances")
-        ec2r.instances.filter(InstanceIds=configured_ids).terminate()
+#        configured_ids = [config.get('instances','dbid'), config.get('instances','appid')]
+#        print("Terminating AWS instances")
+#        ec2r.instances.filter(InstanceIds=configured_ids).terminate()
 
         print("Removing instances from local configuration file")
         config.remove_section('instances')
