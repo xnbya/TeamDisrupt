@@ -9,7 +9,7 @@
 #
 # two: {}
 # column: value
-hunter: 
-    name: hunter
-    email: a@hunter2.io
-    encrypted_password: <%= Devise::Encryptor.digest(User, "hunter2") %>
+hunter:
+  name: hunter
+  email: a@hunter2.io
+  encrypted_password: <%= Devise::Encryptor.digest(User, "hunter2") %>
