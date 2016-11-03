@@ -1,3 +1,4 @@
+<div class="jumbotron">
 <h2>Editing <%= @reference.title %><%= "Untitled Reference" unless @reference.title.length > 0 %></h2>
 
 <%= form_for(@reference) do |f| %>
@@ -12,3 +13,4 @@
 
   <%= f.submit "Save", class: "btn btn-primary "%>
 <% end %>
+</div>

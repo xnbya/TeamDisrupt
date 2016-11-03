@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Webapp</title>
+    <title>SimpleRef App</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -11,6 +11,9 @@
   <body>
       <div class="container-fluid">
         <%= render "shared/nav" %>
+
+        <%= render "shared/title" %>
+
         <% if notice %>
           <div class="alert alert-info" role="alert">
             <%= notice %>

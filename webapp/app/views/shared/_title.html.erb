@@ -1,0 +1,26 @@
+<% if current_page?('/')  %>
+  <h1 class="jumbotron">
+    Reference Manager Web Application
+  </h1>
+
+<% elsif current_page?('/home') %>
+  <h1 class="jumbotron">
+      Hi, <%= current_user.name %>!
+  </h1>
+
+<% elsif current_page?('/references') %>
+  <h1 class="jumbotron"> All References </h1>
+
+<% elsif current_page?('/users/sign_up') %>
+  <h1 class="jumbotron"> Sign Up </h1>
+
+<% elsif current_page?('/users/sign_in') %>
+  <h1 class="jumbotron"> Log In </h1>
+
+<% elsif current_page?('/references') %>
+  <h1 class="jumbotron"> All References </h1>
+
+<% elsif current_page?(reference_path) %>
+  <h1 class="jumbotron"> Viewing "<%= @reference.title %><%= "Untitled Reference" unless @reference.title.length > 0 %>" </h1>
+
+<% end %>
