@@ -19,7 +19,30 @@
     - rails
     - build-essential
     - libpq-dev
+    - libsqlite3-dev
 
 - name: Install builder
   become: yes
   command: gem install builder
+
+- name: Clone git repository
+  become: yes
+  become_user: ubuntu
+  git:
+    repo: git@github.com:xnbya/TeamDisrupt.git
+    dest: ~/TeamDisrupt
+    version: development
+
+- name: bundle install in webapp/
+  become: yes
+  become_user: ubuntu
+  command: bundle install
+  args:
+    chdir: ~/TeamDisrupt/webapp
+
+- name: Configure database connection
+  become: yes
+  become_user: ubuntu
+  template:
+    src: templates/dbconf.j2
+    dest: ~/TeamDistrupt/webapp/config/database.yml
