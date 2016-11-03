@@ -21,7 +21,11 @@ class ReferencesController < ApplicationController
   # Shows all references.
   def index
     start = (params[:start].to_i > 0)? params[:start].to_i : 0
+    start = start - (start % 5)
     @references = Reference.limit(5).offset(start)
+    @count = Reference.count
+    @pages = ((@count * 1.0) / 5).ceil
+    @this_page = (start / 5) + 1
   end
 
   # Shows a reference by its id.
