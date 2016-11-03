@@ -2,14 +2,13 @@
 
 # script to connect to database as setup in launch.py and restore
 # db dump passed as parameter 1 (from loal machine)
-# db name passed as param 2
 
 import boto3, configparser, time, os, pickle, sys
 
 #check params
-if(len(sys.argv) != 3):
+if(len(sys.argv) != 2):
     print("Invalid number of arguments \n Please supply dump as 1st argument and db name as 2nd argument")
-    print("eg ./restore-db.py backup.sql simpleref-development")
+    print("eg ./restore-db.py backup.sql ")
     sys.exit()
 
 #load config for ec2 instance
@@ -26,4 +25,4 @@ if (not config.has_section('instances')):
 os.system('scp -i ' + config.get(myconfig, "key-location") + ' ' + sys.argv[1] + ' ' + 'ubuntu@' + config.get('instances', 'dbip') + ':~/backup.sql') 
 
 #run restorescript
-os.system('ssh -i ' + config.get(myconfig, "key-location") + ' ubuntu@' + config.get('instances', 'dbip')  + ' "~/TeamDisrupt/scripts/db-backup/db-restore-local.sh simpleref-development ' + sys.argv[2] + '"') 
+os.system('ssh -i ' + config.get(myconfig, "key-location") + ' ubuntu@' + config.get('instances', 'dbip')  + ' "~/TeamDisrupt/scripts/db-backup/db-restore-local.sh simpleref_development ~/backup.sql" ') 
