@@ -1,0 +1,16 @@
+---
+postgresql_version: 9.5
+
+postgresql_databases:
+  - name: pgadmin
+    owner: pgadmin
+
+postgresql_users:
+  - name: pgadmin
+    pass: hunter2
+
+postgresql_user_privileges:
+  - name: pgadmin
+    db: pgadmin
+    priv: "ALL"
+    role_attr_flags: "CREATEDB"

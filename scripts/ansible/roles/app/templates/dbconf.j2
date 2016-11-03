@@ -1,0 +1,25 @@
+# PostgreSQL. Versions 8.2 and up are supported.
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see rails configuration guide
+  # http://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: 5
+  username: pgadmin
+  # TODO: make password be an argument
+  password: hunter2
+  host: {{ hostvars.tag_Name_db.ansible_ssh_host }}
+
+development:
+  <<: *default
+  database: simpleref_development
+
+test:
+  <<: *default
+  database: simpleref_test
+
+production:
+  <<: *default
+  database: simpleref_production
+  username: simpleref
+  password: <%= ENV['SIMPLEREF_DATABASE_PASSWORD'] %>
