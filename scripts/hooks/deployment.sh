@@ -51,6 +51,7 @@ dbtmp=$(< $dbconfig)
 
 # Reset the repo to the most recent version online
 echo "Fetching most recent change from branch '$branch'..."
+eval "git checkout $branch"
 eval "git fetch -a"
 eval "git reset --hard origin/$branch"
 
