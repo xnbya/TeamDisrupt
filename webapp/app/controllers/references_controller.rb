@@ -10,10 +10,17 @@ class ReferencesController < ApplicationController
   def create
     @reference = current_user.references.new(reference_params)
 
-    if @reference.save
-      alert = "Saved!"
-      redirect_to home_path
+    @reference.link = Reference.sanitise_url(@reference.link)
+    if Reference.valid_url(@reference.link)
+      if @reference.save
+        flash[:notice] = "Reference saved!"
+        redirect_to @reference
+      else
+        flash[:alert] = "Something went wrong."
+        redirect_to new_reference_path
+      end
     else
+      flash[:alert] = "Not a valid URL!"
       redirect_to new_reference_path
     end
   end
@@ -21,7 +28,11 @@ class ReferencesController < ApplicationController
   # Shows all references.
   def index
     start = (params[:start].to_i > 0)? params[:start].to_i : 0
+    start = start - (start % 5)
     @references = Reference.limit(5).offset(start)
+    @count = Reference.count
+    @pages = ((@count * 1.0) / 5).ceil
+    @this_page = (start / 5) + 1
   end
 
   # Shows a reference by its id.
@@ -41,6 +52,7 @@ class ReferencesController < ApplicationController
     end
   end
 
+  # Updates the reference.
   def update
     @reference = Reference.find(params[:id])
     @user = @reference.user
@@ -60,6 +72,24 @@ class ReferencesController < ApplicationController
     else
       flash[:alert] = "Not a valid url!"
       redirect_to edit_reference_path(@reference)
+    end
+  end
+
+  def destroy
+    @reference = Reference.find(params[:id])
+    @user = @reference.user
+
+    if @user == current_user
+      if Reference.delete(@reference)
+        flash[:notice] = "Deleted!"
+        redirect_to references_path
+      else
+        flash[:alert] = "Something went wrong!"
+        redirect_to @reference
+      end
+    else
+      flash[:alert] = "Deleting other people's stuff is rude!"
+      redirect_to @reference
     end
   end
 
