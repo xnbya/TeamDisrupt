@@ -4,6 +4,12 @@ require 'test/unit'
 module Test
   class TestReferenceCreate < Test::Unit::TestCase
 
+    def input_data(finder, finder_value, value)
+      elem = @driver.find_element(finder, finder_value)
+      elem.clear
+      elem.send_keys(value)
+    end
+
     def setup
       @driver = Selenium::WebDriver.for :phantomjs
       @home_url = 'http://127.0.0.1:3000/home'
@@ -15,13 +21,8 @@ module Test
         @driver.find_element(:name, 'commit')
       }
 
-      email = @driver.find_element(:id, 'user_email')
-      email.clear
-      email.send_keys('a@hunter2.io')
-
-      password = @driver.find_element(:id, 'user_password')
-      password.clear
-      password.send_keys('hunter2')
+      input_data(:id, 'user_email', 'a@hunter2.io')
+      input_data(:id, 'user_password', 'hunter2')
 
       @driver.find_element(:name, 'commit').click
 
@@ -34,24 +35,16 @@ module Test
       assert(alert_text.include? 'Signed in successfully.')
     end
 
-    test '01 user can create a reference' do
+    test 'user can create a reference' do
       @driver.navigate.to(@new_reference_url)
       wait = Selenium::WebDriver::Wait.new(:timeout => 5)
       wait.until {
          @driver.find_element(:name, 'commit')
       }
 
-      title = @driver.find_element(:id, 'reference_title')
-      title.clear
-      title.send_keys('Graph Theory')
-
-      link = @driver.find_element(:id, 'reference_link')
-      link.clear
-      link.send_keys('https://theory.com/graph_theory')
-
-      note = @driver.find_element(:id, 'reference_note')
-      note.clear
-      note.send_keys('Reference pertaining to elementary graph theory')
+      input_data(:id, 'reference_title', 'Graph Theory')
+      input_data(:id, 'reference_link', 'https://theory.com/graph_theory')
+      input_data(:id, 'reference_note', 'Reference pertaining to elementary graph theory')
 
       @driver.find_element(:name, 'commit').click
 
@@ -72,5 +65,34 @@ module Test
       assert(created)
     end
 
-  end 
+    test 'user cant create a reference with empty link' do
+      @driver.navigate.to(@new_reference_url)
+      wait = Selenium::WebDriver::Wait.new(:timeout => 5)
+      wait.until {
+         @driver.find_element(:name, 'commit')
+      }
+
+      input_data(:id, 'reference_title', 'Sorting Things')
+      input_data(:id, 'reference_link', '')
+      input_data(:id, 'reference_note', 'Reference pertaining to sorting things')
+
+      @driver.find_element(:name, 'commit').click
+
+      wait = Selenium::WebDriver::Wait.new(:timeout => 5)
+      wait.until {
+        @driver.find_elements(:tag_name, 'h3')
+      }
+
+      created = false
+
+      @driver.find_elements(:tag_name, 'h3').each do |elem|
+        if elem.text.include? 'Sorting Things'
+          created = true
+          break
+        end
+      end
+
+      assert !(created)
+    end
+  end
 end
