@@ -9,6 +9,6 @@ class Reference < ApplicationRecord
 
   def self.valid_url(str)
     allowed_chars = "[-A-Za-z0-9@:%._\+~#=?&//=]"
-    return /^(https?:)?\/\/#{allowed_chars}{2,256}\.[a-z]+\b(#{allowed_chars}*)?/ =~ str
+    return ((/^(https?:)?\/\/#{allowed_chars}{2,256}\.[a-z]+\b(#{allowed_chars}*)?/ =~ str) == 0)
   end
 end
