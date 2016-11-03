@@ -61,6 +61,8 @@ cd $ahome
 sudo -u $auser git clone git@github.com:xnbya/TeamDisrupt.git
 cd TeamDisrupt
 
-#for testing branch
 sudo -u ubuntu git checkout scripting
+#copy scripts needed for when branch changes
+mkdir ~/scripts/
+cp scripts/hooks/deployment.sh ~/scripts/
 
