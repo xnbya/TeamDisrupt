@@ -28,13 +28,11 @@ test:
 
 production:
   <<: *default
-  database: simpleref_production
-  username: simpleref
-  password: <%= ENV['SIMPLEREF_DATABASE_PASSWORD'] %>"
+  database: simpleref_production"
 
 #setup db for app
 cd ~/TeamDisrupt/webapp
-git checkout development
+git checkout testing
 rm ./config/database.yml
 echo "${dbconf}" | tee ./config/database.yml
 
@@ -46,4 +44,6 @@ bundle install
 rake db:create
 rake db:migrate
 
+#run app
+tmux new -d -s my-session 'rails s -b 0.0.0.0'
 

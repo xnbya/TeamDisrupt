@@ -5,11 +5,10 @@ image-id = ami-8504fdea
 ;ec2 instance type
 instance-type = t2.nano
 ;add your ssh key name here
-key-name = alex-eu-central
+key-name = CHANGE_ME
 ;location of ssh key
-key-location = ~/crypto/alex-eu-central.pem
+key-location = CHANGE_ME
 ;create a security group and allow access to at least port 22
-security-groups = alex-1
+security-groups = CHANGE_ME
 
-;instances will be added here
 
