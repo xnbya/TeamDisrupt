@@ -12,14 +12,14 @@ myconfig="ec2conf"
 #script=f.read()
 
 ec2r = boto3.resource('ec2')
-
 #check to see if instances exist
+
 if (config.has_section('instances')):
         print("There are instances in your config file. Do you want to terminate them? (y/N)")
         if input() != 'y':
             sys.exit()
 
-        configured_ids = [config.get('instances','dbid'), config.set('instances','appid')]
+        configured_ids = [config.get('instances','dbid'), config.get('instances','appid')]
         print("Terminating AWS instances")
         ec2r.terminate_instances(instace_ids=configured_ids)
 
