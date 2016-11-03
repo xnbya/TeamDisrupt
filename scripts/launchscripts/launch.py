@@ -11,13 +11,24 @@ myconfig="ec2conf"
 #f=open("dbserver.sh")
 #script=f.read()
 
+ec2r = boto3.resource('ec2')
+
 #check to see if instances exist
 if (config.has_section('instances')):
-        print("Instances exist, continue? (y/N)")
+        print("There are instances in your config file. Do you want to terminate them? (y/N)")
         if input() != 'y':
             sys.exit()
+
+        configured_ids = [config.get('instances','dbid'), config.set('instances','appid')]
+        print("Terminating AWS instances")
+        ec2r.terminate_instances(instace_ids=configured_ids)
+
+        print("Removing instances from local configuration file")
         config.remove_section('instances')
-    
+
+print("Do you want to launch new instances? (y/N)")
+if input() != 'y':
+    sys.exit()
 
 #launch instances
 ec2 = boto3.client('ec2')
@@ -45,7 +56,6 @@ waiter.wait(InstanceIds=ids)
 print('Instances running')
 
 #get IPs
-ec2r = boto3.resource('ec2')
 dbserver = ec2r.Instance(ids[0])
 print('dbserver ip: ' + dbserver.public_ip_address)
 
@@ -85,3 +95,6 @@ runcmd(appserver.public_ip_address, '"`cat gitsetup.sh`"')
 print('appserver ip:' + appserver.public_ip_address)
 runcmd(appserver.public_ip_address, '"bash ~/TeamDisrupt/scripts/launchscripts/staging-server.sh ' + dbpass + ' ' + dbserver.public_ip_address + '"')
 
+# Print instances IPs
+print('db: {}'.format(dbserver.public_ip_address))
+print('app: {}'.format(appserver.public_ip_address))
