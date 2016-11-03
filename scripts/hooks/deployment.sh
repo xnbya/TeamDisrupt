@@ -4,9 +4,10 @@
 #
 # Description of this script:
 #
-#
-#
-#
+# This script shuts down the tmux session running Rails, backs up the
+# existing `database.yml` file, resets the current repository to the
+# most recent state of the branch specified in parameters, restores
+# backed up `database.yml` and rums a tmux session running Rails.
 #
 ######################################################################
 
