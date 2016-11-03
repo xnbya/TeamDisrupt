@@ -4,6 +4,15 @@ require 'test/unit'
 module Test
   class TestReferenceCreate < Test::Unit::TestCase
 
+    alias :__at_exit :at_exit
+    def at_exit(&block)
+      __at_exit do
+        exit_status = $!.status if $!.is_a?(SystemExit)
+        block.call
+        exit exit_status if exit_status
+      end
+    end
+
     def input_data(finder, finder_value, value)
       elem = @driver.find_element(finder, finder_value)
       elem.clear
@@ -94,5 +103,6 @@ module Test
 
       assert !(created)
     end
+
   end
 end
