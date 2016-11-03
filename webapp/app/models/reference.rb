@@ -5,6 +5,7 @@ class Reference < ApplicationRecord
     unless (/^(https?\:)?\/\// =~ str)
       str = "http://" << str
     end
+    str
   end
 
   def self.valid_url(str)
