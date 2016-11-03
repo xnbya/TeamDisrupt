@@ -29,7 +29,7 @@ gem 'jbuilder', '~> 2.5'
 
 # Test unit
 gem 'test-unit'
-# Selenium webdriver
+# Selenium WebDriver
 gem 'selenium-webdriver'
 
 # Use Capistrano for deployment
@@ -58,7 +58,7 @@ gem 'devise'
 
 # Bootstrap !
 gem 'sprockets-rails'
-gem 'bootstrap', '~> 4.0.0.alpha3'
+gem 'bootstrap', '~> 4.0.0.alpha5'
 source 'https://rails-assets.org' do
       gem 'rails-assets-tether', '>= 1.1.0'
 end
