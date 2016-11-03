@@ -1,0 +1,20 @@
+<% (0..(references.length / 3)).each do |i| %>
+  <% if (references.length / 3 == i) %>
+    <div class="row"><div class="col-sm-<%=4 * (references.length % 3)%> offset-sm-<%=6 - (2* (references.length % 3))%>">
+  <% end %>
+  <div class="card-deck">
+    <% references[(i*3)..(i*3 + 2)].each do |reference| %>
+      <div class="card card-block">
+          <h4 class="card-title"><%= reference.title %><%= "Untitled Reference" if reference.title.blank? %></h4>
+          <%= link_to "Details", reference_path(reference), class: "btn btn-primary" %>
+          <%= link_to "Open Link", reference.link, target: "_blank", class: "btn btn-secondary" %>
+          <p class="card-text"><small class="text-muted">
+            Created on <%= reference.created_at.strftime("%a %d %B") %>
+          </small></p>
+      </div>
+    <% end %>
+  </div>
+  <% if (references.length / 3 == i) %>
+    </div></div>
+  <% end %>
+<% end %>

@@ -5,10 +5,5 @@
 <h4> <%= link_to "Add Reference", new_reference_path %></h4> <br>
 
 <h2>Your Latest References</h2><br>
-<% @references.each do |reference| %>
-  <h3><%= reference.title %><%= "Untitled Reference" unless reference.title.length > 0 %></h3>
-  <p>Created on <%= reference.created_at.strftime("%a %d %B") %></p>
-  <p><%= link_to "View", reference_path(reference) %></p>
-<% end %>
-
+<%= render partial: "shared/reference", locals: { references: @references } %>
 <h4><%= link_to "View All References", references_path %> </h4>
