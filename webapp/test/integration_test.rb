@@ -193,7 +193,6 @@ module Test
       					if item.text.encode('UTF-8') == "Email can't be blank" then
                   assert_equal(3, email_num)
       					elsif item.text.encode('UTF-8') == "Email has already been taken" then
-                  print
                   assert_equal(2, email_num)
       					elsif item.text.encode('UTF-8') ==  "Password is too short (minimum is 6 characters)" then
                   assert_equal(2, pw_num)
