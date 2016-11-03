@@ -1,4 +1,5 @@
 require 'selenium-webdriver'
+require 'active_support/all'
 require 'test/unit'
 
 module Test
