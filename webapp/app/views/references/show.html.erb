@@ -1,0 +1,28 @@
+<nav class="breadcrumb">
+  <%= link_to "References", references_path, class: "breadcrumb-item" %>
+  <span class="breadcrumb-item active"><%= @reference.title %><%= "Untitled Reference" unless @reference.title.length > 0 %></span>
+</nav>
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+
+    <h1 class="display-3"><%= @reference.title %><%= "Untitled Reference" unless @reference.title.length > 0 %></h1>
+    <% unless @user.nil? %><h3><small class="text-muted">Created by <%= @user.name %> on <%= @reference.created_at.strftime("%A %d %B") %>.</small></h3><% end %>
+    <div class="input-group">
+      <span class="input-group-addon"><samp><%= @reference.link %></samp></span>
+      <span class="input-group-btn">
+        <a class="btn btn-primary" href="<%= @reference.link %>">Open</a>
+      </span>
+    </div>
+    <h3>About this reference</h3>
+    <p><%= @reference.note %>
+      <%= "This curator did not provide a note." if @reference.note.empty? %>
+    </p>
+    <% if @user == current_user %>
+      <p>
+        <%= link_to "Edit", edit_reference_path(@reference), class: "btn btn-secondary" %>
+        <%= link_to "Delete", reference_path(@reference), method: :delete, class: "btn btn-danger" %>
+      </p>
+    <% end %>
+  </div>
+</div>

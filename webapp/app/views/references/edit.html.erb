@@ -1,0 +1,14 @@
+<h2>Editing <%= @reference.title %><%= "Untitled Reference" unless @reference.title.length > 0 %></h2>
+
+<%= form_for(@reference) do |f| %>
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+
+  <%= f.label :link %>
+  <%= f.text_field :link %>
+
+  <%= f.label :note %>
+  <%= f.text_field :note %>
+
+  <%= f.submit "Save", class: "btn btn-primary "%>
+<% end %>
