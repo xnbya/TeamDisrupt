@@ -11,6 +11,8 @@ dbpass=$1
 dbhost=$2
 dbname=$3
 
+sudo apt-get install postgresql-client
+
 mkdir ~/backups/
 echo "0 * * * * ~/TeamDisrupt/scripts/db-backup/db-backup.sh $dbhost 5432 $dbname pgadmin $dbpass ~/backups/ 20" | crontab -
 

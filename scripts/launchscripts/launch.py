@@ -26,10 +26,6 @@ if (config.has_section('instances')):
         print("Removing instances from local configuration file")
         config.remove_section('instances')
 
-print("Do you want to launch new instances? (Y/n)")
-if input() != 'n':
-    sys.exit()
-
 print("Deploy testing? (Y/n)")
 testing = False
 if input() != 'n':
