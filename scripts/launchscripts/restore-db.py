@@ -7,7 +7,7 @@ import boto3, configparser, time, os, pickle, sys
 
 #check params
 if(len(sys.argv) != 2):
-    print("Invalid number of arguments \n Please supply dump as 1st argument and db name as 2nd argument")
+    print("Invalid number of arguments \n Please supply dump as 1st argument")
     print("eg ./restore-db.py backup.sql ")
     sys.exit()
 
