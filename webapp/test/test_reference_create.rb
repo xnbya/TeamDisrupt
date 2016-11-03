@@ -4,15 +4,6 @@ require 'test/unit'
 module Test
   class TestReferenceCreate < Test::Unit::TestCase
 
-    alias :__at_exit :at_exit
-    def at_exit(&block)
-      __at_exit do
-        exit_status = $!.status if $!.is_a?(SystemExit)
-        block.call
-        exit exit_status if exit_status
-      end
-    end
-
     def input_data(finder, finder_value, value)
       elem = @driver.find_element(finder, finder_value)
       elem.clear
@@ -23,7 +14,7 @@ module Test
       @driver = Selenium::WebDriver.for :phantomjs
       @home_url = 'http://127.0.0.1:3000/home'
       @new_reference_url = 'http://127.0.0.1:3000/references/new'
-      wait = Selenium::WebDriver::Wait.new(:timeout => 5)
+      wait = Selenium::WebDriver::Wait.new(:timeout => 10)
 
       @driver.navigate.to('http://127.0.0.1:3000/users/sign_in')
       wait.until {
@@ -35,7 +26,7 @@ module Test
 
       @driver.find_element(:name, 'commit').click
 
-      wait = Selenium::WebDriver::Wait.new(:timeout => 5)
+      wait = Selenium::WebDriver::Wait.new(:timeout => 10)
       wait.until {
         @driver.find_element(:class, 'alert').text
       }
@@ -46,7 +37,7 @@ module Test
 
     test 'user can create a reference' do
       @driver.navigate.to(@new_reference_url)
-      wait = Selenium::WebDriver::Wait.new(:timeout => 5)
+      wait = Selenium::WebDriver::Wait.new(:timeout => 10)
       wait.until {
          @driver.find_element(:name, 'commit')
       }
@@ -59,12 +50,13 @@ module Test
 
       wait = Selenium::WebDriver::Wait.new(:timeout => 5)
       wait.until {
-        @driver.find_elements(:tag_name, 'h3')
+        @driver.find_element(:tag_name, 'h1')
       }
 
       created = false
 
-      @driver.find_elements(:tag_name, 'h3').each do |elem|
+      @driver.find_elements(:tag_name, 'h1').each do |elem|
+        print elem.text
         if elem.text.include? 'Graph Theory'
           created = true
           break
@@ -76,7 +68,7 @@ module Test
 
     test 'user cant create a reference with empty link' do
       @driver.navigate.to(@new_reference_url)
-      wait = Selenium::WebDriver::Wait.new(:timeout => 5)
+      wait = Selenium::WebDriver::Wait.new(:timeout => 10)
       wait.until {
          @driver.find_element(:name, 'commit')
       }
@@ -87,21 +79,13 @@ module Test
 
       @driver.find_element(:name, 'commit').click
 
-      wait = Selenium::WebDriver::Wait.new(:timeout => 5)
+      wait = Selenium::WebDriver::Wait.new(:timeout => 10)
       wait.until {
-        @driver.find_elements(:tag_name, 'h3')
+        @driver.find_element(:class, 'alert').text
       }
 
-      created = false
-
-      @driver.find_elements(:tag_name, 'h3').each do |elem|
-        if elem.text.include? 'Sorting Things'
-          created = true
-          break
-        end
-      end
-
-      assert !(created)
+      alert_text = @driver.find_element(:class, 'alert').text
+      assert(alert_text.include? 'Not a valid URL!')
     end
 
   end
