@@ -200,7 +200,6 @@ DEPENDENCIES
   selenium-webdriver
   spring
   spring-watcher-listen (~> 2.0.0)
-  test-unit
   sprockets-rails
   test-unit
   turbolinks (~> 5)
