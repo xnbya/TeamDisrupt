@@ -56,7 +56,6 @@ module Test
       created = false
 
       @driver.find_elements(:tag_name, 'h1').each do |elem|
-        print elem.text
         if elem.text.include? 'Graph Theory'
           created = true
           break
