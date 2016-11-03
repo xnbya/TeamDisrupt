@@ -36,14 +36,14 @@ git checkout development
 rm ./config/database.yml
 echo "${dbconf}" | tee ./config/database.yml
 
-sudo apt-get install -y libsqlite3-dev ruby ruby-dev rails build-essential libpq-dev iptables-persistent
+sudo apt-get install -y libsqlite3-dev ruby ruby-dev rails build-essential libpq-dev 
 
 #redirect port 80
 sudo iptables -t nat -I PREROUTING --src 0/0 -p tcp --dport 80 -j REDIRECT --to-ports 3000
-sudo iptables-save | sudo tee /etc/iptables/rules
 
 #auto restart
-echo "@reboot cd ~/TeamDisrupt/webapp && tmux new -d -s my-session 'rails s -b 0.0.0.0'" | crontab -
+echo "@reboot cd ~/TeamDisrupt/webapp && tmux new -d -s my-session 'rails s -b 0.0.0.0' && sudo iptables -t nat -I PREROUTING --src 0/0 -p tcp --dport 80 -j REDIRECT --to-ports 3000 " | crontab -
+
 
 sudo gem install builder
 bundle install
