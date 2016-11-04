@@ -90,7 +90,7 @@ module Test
 
   end
 
-  class TestHomePage < Test::Unit::TestCase
+  class TestUserCreate < Test::Unit::TestCase
 
     def setup
       @driver = Selenium::WebDriver.for :phantomjs
@@ -205,6 +205,130 @@ module Test
       			end
       		end
       	end
+      end
+    end
+  end
+
+  class TestReferenceModification < Test::Unit::TestCase
+
+    def input_data(finder, finder_value, value)
+      elem = @driver.find_element(finder, finder_value)
+      elem.clear
+      elem.send_keys(value)
+    end
+
+    def setup
+      @driver = Selenium::WebDriver.for :phantomjs
+      @home_url = 'http://127.0.0.1:3000/home'
+      @new_reference_url = 'http://127.0.0.1:3000/references/new'
+      wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+
+      #Time for new email account
+      Time::DATE_FORMATS[:type] = "%y%m%d%H%M"
+      @start_time = Time.now
+
+      @driver.navigate.to('http://127.0.0.1:3000/users/sign_in')
+      wait.until {
+        @driver.find_element(:name, 'commit')
+      }
+
+      input_data(:id, 'user_email', 'a@hunter2.io')
+      input_data(:id, 'user_password', 'hunter2')
+
+      @driver.find_element(:name, 'commit').click
+
+      wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+      wait.until {
+        @driver.find_element(:class, 'alert').text
+      }
+
+      alert_text = @driver.find_element(:class, 'alert').text
+      assert(alert_text.include? 'Signed in successfully.')
+    end
+
+    test "can modify reference" do
+      list = @driver.find_element(:xpath, "//div[contains(@class, 'container-fluid')]")
+      new_a = list.find_element(:xpath, "//a[contains(@href, '/references/new')]")
+      items = list.find_elements(:xpath, "//a[contains(@href, '/references/')]")
+
+      items.each do |item|
+        if item != new_a then
+          item.click #Top item is selected
+          break
+        end
+      end
+
+      wait = Selenium::WebDriver::Wait.new(:timeout => 600) # seconds
+      begin
+        element = wait.until { @driver.find_element(:xpath, "//a[contains(@href, '/edit')]")}
+      ensure
+        #puts "Wait@edit"
+      end
+
+      edit = @driver.find_element(:xpath, "//a[contains(@href, '/edit')]")
+      edit.click
+
+      wait = Selenium::WebDriver::Wait.new(:timeout => 600) # seconds
+      begin
+        element = wait.until { @driver.find_element(:class, "edit_reference")}
+      ensure
+        #puts "Wait@edit_detail"
+      end
+
+      #Modify
+      #title
+      title = @driver.find_element(:id, 'reference_title')
+      title.clear
+      title.send_keys "Test_" + @start_time.to_s(:type)
+      #link
+      link = @driver.find_element(:id, 'reference_link')
+      link.clear
+      link.send_keys "test_r1.txt"
+      #note
+      note = @driver.find_element(:id, 'reference_note')
+      note.clear
+      note.send_keys @start_time.to_s(:type)
+      #Click
+      create = @driver.find_element(:name, 'commit')
+      create.click
+      #Waiting
+      wait = Selenium::WebDriver::Wait.new(:timeout => 600) # seconds
+
+      begin
+        element = wait.until { @driver.find_element(:xpath, "//a[contains(@href, '/edit')]")}
+      ensure
+        #puts "Wait@edit_result"
+      end
+
+      #Check
+      list = @driver.find_element(:xpath, "//div[contains(@class, 'container-fluid')]")
+      #title
+      items = list.find_elements(:tag_name, 'h1')
+      flag_t = false
+      items.each do |item|
+        if item.text.encode('UTF-8') == "Test_" + @start_time.to_s(:type) then
+          flag_t = true
+        end
+      end
+      #link
+      items = list.find_elements(:xpath, "//a[contains(@href, 'http://test_r1.txt')]")
+      flag_l = false
+      if items != nil then
+        flag_l = true
+      end
+      #note
+      items = list.find_elements(:tag_name, 'p')
+      flag_n = false
+      items.each do |item|
+        if item.text.encode('UTF-8') == @start_time.to_s(:type) then
+        flag_n = true
+        end
+      end
+
+      if flag_t == true and flag_l == true and flag_n == true then
+        assert true
+      else
+        assert false
       end
     end
   end
