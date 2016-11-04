@@ -1,9 +1,11 @@
-<%= form_for(@reference, url: references_path, class: "form") do |f| %>
-  <%= f.label :title %>
-  <%= f.text_field :title, placeholder: "Title" %>
-  <%= f.label :link %>
-  <%= f.text_field :link, placeholder: "Link" %>
-  <%= f.label :note %>
-  <%= f.text_field :note, placeholder: "Note" %>
-  <%= f.submit class: "btn btn-primary"%>
-<% end %>
+<div class="jumbotron">
+  <%= form_for(@reference, url: references_path, class: "form") do |f| %>
+    <%= f.label :title %>
+    <%= f.text_field :title, placeholder: "Title" %>
+    <%= f.label :link %>
+    <%= f.text_field :link, placeholder: "Link" %>
+    <%= f.label :note %>
+    <%= f.text_field :note, placeholder: "Note" %>
+    <%= f.submit class: "btn btn-primary"%>
+  <% end %>
+</div>

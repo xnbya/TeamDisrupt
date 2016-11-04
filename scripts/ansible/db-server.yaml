@@ -1,0 +1,16 @@
+---
+- hosts: tag_Name_db
+  vars_files:
+    - ./vars/postgres.yaml
+  roles:
+    - git
+    - postgresql
+
+  tasks:
+    - name: Clone git repository
+      become: yes
+      become_user: ubuntu
+      git:
+        repo: git@github.com:xnbya/TeamDisrupt.git
+        dest: ~/TeamDisrupt
+        version: scripting

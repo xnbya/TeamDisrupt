@@ -27,6 +27,11 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# Test unit
+gem 'test-unit'
+# Selenium WebDriver
+gem 'selenium-webdriver'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -53,7 +58,7 @@ gem 'devise'
 
 # Bootstrap !
 gem 'sprockets-rails'
-gem 'bootstrap', '~> 4.0.0.alpha3'
+gem 'bootstrap', '~> 4.0.0.alpha5'
 source 'https://rails-assets.org' do
       gem 'rails-assets-tether', '>= 1.1.0'
 end
