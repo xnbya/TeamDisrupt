@@ -1,4 +1,9 @@
 language: ruby
+branches:
+    only:
+        - master
+        - testing
+        - development
 rvm:
     - 2.2.2
 env:
